@@ -6,12 +6,15 @@ const { body, validationResult } = require("express-validator");
 
 router.get("/users", async (req, res) => {
   const users = await User.find();
-  // console.log(users);
-  res.send(users);
+  console.log(users);
+  res.json({users}).end();
 });
 router.get("/login/:id", async (req, res) => {
   console.log(req.params.id);
   res.json([req.params.id]);
+});
+router.get("/check",  (req, res) => {
+  res.json({check : "TRUE"}).end();
 });
 
 router.post(
