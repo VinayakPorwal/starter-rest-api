@@ -7,7 +7,7 @@ const { body, validationResult } = require("express-validator");
 router.get("/users", async (req, res) => {
   const users = await User.find();
   console.log(users);
-  res.json({users}).end();
+  res.json({ user : users}).end();
 });
 router.get("/login/:id", async (req, res) => {
   console.log(req.params.id);
