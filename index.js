@@ -74,7 +74,7 @@ app.use(cors());
 
 app.get("/aboutWeb", (req, res) => {
   res.status(200);
-  res.send("this is about");
+  res.json({ msg: 'About' }).end();
 });
 app.use("/auth", auth);
 // Catch all handler for all other request.
