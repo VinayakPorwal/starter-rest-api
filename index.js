@@ -73,7 +73,9 @@ app.use(express.static("./dist"));
 app.get("/", async (req, res) => {
   const users = await User.find();
   console.log(users);
-  res.json({ user : users}).end();
+  // res.json({ user : users}).end();
+  res.sendFile(path.join(__dirname, "./dist/index.html"));
+
 });
 
 
@@ -93,7 +95,7 @@ app.use("/auth", auth);
 app.use('*', (req, res) => {
 
 
-  res.json({ msg: 'Welcome' }).end()
+  // res.json({ msg: 'Welcome' }).end()
   res.sendFile(path.join(__dirname, "./dist/index.html"));
 
 
