@@ -1,9 +1,9 @@
-const express = require('express')
-const app = express()
-const db = require('@cyclic.sh/dynamodb')
+const express = require("express");
+const app = express();
+const db = require("@cyclic.sh/dynamodb");
 const User = require("./models/user");
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 const path = require("path");
 const cors = require("cors");
 const auth = require("./routes/auth");
@@ -13,7 +13,6 @@ app.use(express.json());
 app.use(cors());
 
 app.use(express.static("./dist"));
-
 
 // #############################################################################
 // This configures static hosting for files in /public that have the extensions
@@ -70,39 +69,36 @@ app.use(express.static("./dist"));
 //   res.json(items).end()
 // })
 
-app.get("/", async (req, res) => {
+app.get("/users", async (req, res) => {
   const users = await User.find();
   console.log(users);
-  // res.json({ user : users}).end();
+  res.json({ user: users }).end();
+});
+app.get("/page", async (req, res) => {
   res.sendFile(path.join(__dirname, "./dist/index.html"));
-
 });
 
-
-
-
+app.get("/page2", async (req, res) => {
+  res.sendFile(path.join(__dirname, "./index.html"));
+});
 
 app.get("/aboutWeb", (req, res) => {
   res.status(200);
-  res.json({ msg: 'About' }).end();
+  res.json({ msg: "About" }).end();
 });
 app.get("/check", (req, res) => {
   res.status(200);
-  res.json({ msg: 'Ok here is Check' }).end();
+  res.json({ msg: "Ok here is Check" }).end();
 });
 app.use("/auth", auth);
 // Catch all handler for all other request.
-app.use('*', (req, res) => {
-
-
-  // res.json({ msg: 'Welcome' }).end()
-  res.sendFile(path.join(__dirname, "./dist/index.html"));
-
-
-})
+app.use("*", (req, res) => {
+  res.json({ msg: "Welcome" }).end();
+  // res.sendFile(path.join(__dirname, "./dist/index.html"));
+});
 
 // Start the server
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`index.js listening on ${port}`)
-})
+  console.log(`index.js listening on ${port}`);
+});
