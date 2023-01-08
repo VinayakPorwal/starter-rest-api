@@ -12,7 +12,7 @@ const Dbs = require("./db");
 app.use(express.json());
 app.use(cors());
 
-app.use(express.static("./dist"));
+app.use(express.static("./bold"));
 
 // #############################################################################
 // This configures static hosting for files in /public that have the extensions
@@ -75,7 +75,7 @@ app.get("/users", async (req, res) => {
   res.json({ user: users }).end();
 });
 app.get("/page", async (req, res) => {
-  res.sendFile(path.join(__dirname, "./dist/index.html"));
+  res.sendFile(path.join(__dirname, "./bold/index.html"));
 });
 
 app.get("/page2", async (req, res) => {
