@@ -75,6 +75,7 @@ app.get("/users", async (req, res) => {
   res.json({ user: users }).end();
 });
 app.get("/page", async (req, res) => {
+  res.setHeader("Content-Type", "application/json")
   res.sendFile(path.join(__dirname, "./index.html"));
 });
 
