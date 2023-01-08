@@ -75,7 +75,7 @@ app.get("/users", async (req, res) => {
   res.json({ user: users }).end();
 });
 app.get("/page", async (req, res) => {
-  res.sendFile(path.join(__dirname, "./bold/index.html"));
+  res.sendFile(path.join(__dirname, "./index.html"));
 });
 
 app.get("/page2", async (req, res) => {
@@ -94,7 +94,7 @@ app.use("/auth", auth);
 // Catch all handler for all other request.
 app.use("*", (req, res) => {
   res.json({ msg: "Welcome" }).end();
-  // res.sendFile(path.join(__dirname, "./dist/index.html"));
+  // res.sendFile(path.join(__dirname, "./index.html"));
 });
 
 // Start the server
