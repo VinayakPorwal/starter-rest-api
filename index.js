@@ -8,9 +8,13 @@ const path = require("path");
 const cors = require("cors");
 const auth = require("./routes/auth");
 const Dbs = require("./db");
+const path = require("path");
 
 app.use(express.json());
 app.use(cors());
+
+app.use(express.static("./dist"));
+
 
 // #############################################################################
 // This configures static hosting for files in /public that have the extensions
@@ -87,6 +91,9 @@ app.use('*', (req, res) => {
 
 
   res.json({ msg: 'Welcome' }).end()
+  res.sendFile(path.join(__dirname, "./dist/index.html"));
+
+
 })
 
 // Start the server
