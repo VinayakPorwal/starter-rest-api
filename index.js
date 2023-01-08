@@ -8,7 +8,6 @@ const path = require("path");
 const cors = require("cors");
 const auth = require("./routes/auth");
 const Dbs = require("./db");
-const path = require("path");
 
 app.use(express.json());
 app.use(cors());
@@ -84,6 +83,10 @@ app.get("/", async (req, res) => {
 app.get("/aboutWeb", (req, res) => {
   res.status(200);
   res.json({ msg: 'About' }).end();
+});
+app.get("/check", (req, res) => {
+  res.status(200);
+  res.json({ msg: 'Ok here is Check' }).end();
 });
 app.use("/auth", auth);
 // Catch all handler for all other request.
