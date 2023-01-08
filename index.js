@@ -67,7 +67,7 @@ app.use(cors());
 //   res.json(items).end()
 // })
 
-app.get("/users", async (req, res) => {
+app.get("/", async (req, res) => {
   const users = await User.find();
   console.log(users);
   res.json({ user : users}).end();
@@ -84,6 +84,8 @@ app.get("/aboutWeb", (req, res) => {
 app.use("/auth", auth);
 // Catch all handler for all other request.
 app.use('*', (req, res) => {
+
+
   res.json({ msg: 'Welcome' }).end()
 })
 
