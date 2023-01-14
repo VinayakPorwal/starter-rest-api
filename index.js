@@ -12,10 +12,52 @@ const Dbs = require("./db");
 const fs = require("fs");
 const ytdl = require("ytdl-core");
 
+app.set("view engine", "ejs");
 app.use(express.json());
 app.use(cors());
 app.use("/auth", auth);
 process.env.YTDL_NO_UPDATE = "1";
+
+app.get("/users", async (req, res) => {
+  const users = await User.find();
+  console.log(users);
+  res.json({ user: users }).end();
+});
+
+app.get("/", async (req, res) => {
+  res.sendFile(path.join(__dirname, "./index.html"));
+});
+
+
+app.get("/index", (req, res) => {
+	return res.render("index");
+});
+
+app.get("/download", async (req, res) => {
+	const v_id = req.query.url.split('v=')[1];
+    const info = await ytdl.getInfo(req.query.url);
+	// return res.render(("download"), {
+	return res.send({
+		url: "https://www.youtube.com/embed/" + v_id,
+        info: info.formats.sort((a, b) => {
+            return a.mimeType < b.mimeType;
+        }),
+	});
+});
+
+// Catch all handler for all other request.
+app.use("*", (req, res) => {
+  res.json({ msg: "Welcome" }).end();
+  // res.sendFile(path.join(__dirname, "./index.html"));
+});
+
+// Start the server
+const port = process.env.PORT || 5000;
+app.listen(port, () => {
+  console.log(`index.js listening on ${port}`);
+});
+
+
 
 // #############################################################################
 // This configures static hosting for files in /public that have the extensions
@@ -71,39 +113,3 @@ process.env.YTDL_NO_UPDATE = "1";
 //   console.log(JSON.stringify(items, null, 2))
 //   res.json(items).end()
 // })
-
-app.get("/users", async (req, res) => {
-  const users = await User.find();
-  console.log(users);
-  res.json({ user: users }).end();
-});
-
-app.get("/", async (req, res) => {
-  res.sendFile(path.join(__dirname, "./index.html"));
-});
-
-app.use("/down", async (req, res) => {
-  var URL = req.query.URL;
-  res.json({ url: URL });
-  const url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-  const videoName = "never-gonna-give-you-up.mp4";
-
-  ytdl(url)
-    .pipe(fs.createWriteStream(videoName))
-    // ytdl.pipe(res)
-    .on("finish", () => {
-      console.log(`${videoName} has been downloaded!`);
-    });
-});
-
-// Catch all handler for all other request.
-app.use("*", (req, res) => {
-  res.json({ msg: "Welcome" }).end();
-  // res.sendFile(path.join(__dirname, "./index.html"));
-});
-
-// Start the server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`index.js listening on ${port}`);
-});
