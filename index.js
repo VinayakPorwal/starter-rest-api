@@ -28,21 +28,35 @@ app.get("/", async (req, res) => {
   res.sendFile(path.join(__dirname, "./index.html"));
 });
 
-
 app.get("/index", (req, res) => {
-	return res.render("index");
+  return res.render("index");
+});
+
+app.get("/transcript", async (req, res) => {
+  // const v_id = req.query.url.split('v=')[1];
+  return res.send({
+    details: "here",
+  });
 });
 
 app.get("/download", async (req, res) => {
-	const v_id = req.query.url.split('v=')[1];
-    const info = await ytdl.getInfo(req.query.url);
-	// return res.render(("download"), {
-	return res.send({
-		url: "https://www.youtube.com/embed/" + v_id,
-        info: info.formats.sort((a, b) => {
-            return a.mimeType < b.mimeType;
-        }),
-	});
+  const v_id = req.query.url.split("v=")[1];
+  const info = await ytdl.getInfo(req.query.url);
+  // return res.render(("download"), {
+  return res.send({
+    url: "https://www.youtube.com/embed/" + v_id,
+    info: info.formats.sort((a, b) => {
+      return a.mimeType < b.mimeType;
+    }),
+    data : info.related_videos,
+  });
+});
+app.get("/relatedInfo", async (req, res) => {
+  const info = await ytdl.getInfo(req.query.url);
+  // return res.render(("download"), {
+  return res.send({
+    data : info.related_videos,
+  });
 });
 
 // Catch all handler for all other request.
@@ -56,8 +70,6 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`index.js listening on ${port}`);
 });
-
-
 
 // #############################################################################
 // This configures static hosting for files in /public that have the extensions
