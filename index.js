@@ -32,7 +32,7 @@ app.get("/index", (req, res) => {
   return res.render("index");
 });
 
-// Get One Random Qoute 
+// Get One Random Qoute
 app.get("/Qoutes/random", async (req, res) => {
   let rnum = Math.floor(Math.random() * 100);
   let data = await fetch("https://type.fit/api/quotes");
@@ -40,18 +40,17 @@ app.get("/Qoutes/random", async (req, res) => {
 
   return res.send({
     author: realData[rnum].author,
-    qoute : realData[rnum].text ,
+    qoute: realData[rnum].text,
   });
 });
-// All Qoutes 
+// All Qoutes
 app.get("/Qoutes", async (req, res) => {
   let data = await fetch("https://type.fit/api/quotes");
   let realData = await data.json();
   return res.send({
-   realData
+    realData,
   });
 });
-
 
 // Youtube Download API end Point
 app.get("/download", async (req, res) => {
@@ -63,7 +62,7 @@ app.get("/download", async (req, res) => {
     info: info.formats.sort((a, b) => {
       return a.mimeType < b.mimeType;
     }),
-    data : info.related_videos,
+    data: info.videoDetails,
   });
 });
 
@@ -72,11 +71,9 @@ app.get("/relatedInfo", async (req, res) => {
   const info = await ytdl.getInfo(req.query.url);
   // return res.render(("download"), {
   return res.send({
-    data : info.related_videos,
+    data: info.related_videos,
   });
 });
-
-
 
 // Catch all handler for all other request.
 app.use("*", (req, res) => {
