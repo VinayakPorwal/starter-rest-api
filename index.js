@@ -3,18 +3,18 @@ const app = express();
 // const db = require("@cyclic.sh/dynamodb");
 
 const User = require("./models/user");
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 const path = require("path");
 const cors = require("cors");
 const auth = require("./routes/auth");
 const Dbs = require("./db");
 const fs = require("fs");
 const ytdl = require("ytdl-core");
+const fetch = require("node-fetch");
 
-app.set("view engine", "ejs");
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+app.set("view engine", "ejs");
 app.use("/auth", auth);
 process.env.YTDL_NO_UPDATE = "1";
 
@@ -32,13 +32,28 @@ app.get("/index", (req, res) => {
   return res.render("index");
 });
 
-app.get("/transcript", async (req, res) => {
-  // const v_id = req.query.url.split('v=')[1];
+// Get One Random Qoute 
+app.get("/Qoutes/random", async (req, res) => {
+  let rnum = Math.floor(Math.random() * 100);
+  let data = await fetch("https://type.fit/api/quotes");
+  let realData = await data.json();
+
   return res.send({
-    details: "here",
+    author: realData[rnum].author,
+    qoute : realData[rnum].text ,
+  });
+});
+// All Qoutes 
+app.get("/Qoutes", async (req, res) => {
+  let data = await fetch("https://type.fit/api/quotes");
+  let realData = await data.json();
+  return res.send({
+   realData
   });
 });
 
+
+// Youtube Download API end Point
 app.get("/download", async (req, res) => {
   const v_id = req.query.url.split("v=")[1];
   const info = await ytdl.getInfo(req.query.url);
@@ -51,6 +66,8 @@ app.get("/download", async (req, res) => {
     data : info.related_videos,
   });
 });
+
+// Youtube Video Related Info API end Point
 app.get("/relatedInfo", async (req, res) => {
   const info = await ytdl.getInfo(req.query.url);
   // return res.render(("download"), {
@@ -58,6 +75,8 @@ app.get("/relatedInfo", async (req, res) => {
     data : info.related_videos,
   });
 });
+
+
 
 // Catch all handler for all other request.
 app.use("*", (req, res) => {
