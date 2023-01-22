@@ -10,6 +10,7 @@ const Dbs = require("./db");
 const fs = require("fs");
 const ytdl = require("ytdl-core");
 const fetch = require("node-fetch");
+var getSubtitles = require("youtube-captions-scraper").getSubtitles;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -73,6 +74,20 @@ app.get("/relatedInfo", async (req, res) => {
   return res.send({
     data: info.related_videos,
   });
+});
+
+// caption scraping
+app.get("/caption", async (req, res) => {
+  var captions = await getSubtitles({
+    videoID: req.query.id, // youtube video id
+    lang: "en", // default: `en`
+  });
+  console.log(captions);
+  return res.send({
+    data: captions,
+  });
+
+  // res.send("ok")
 });
 
 // Catch all handler for all other request.
