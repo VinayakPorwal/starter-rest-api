@@ -78,16 +78,43 @@ app.get("/relatedInfo", async (req, res) => {
 
 // caption scraping
 app.get("/caption", async (req, res) => {
-  var captions = await getSubtitles({
-    videoID: req.query.id, // youtube video id
-    lang: "en", // default: `en`
-  });
-  console.log(captions);
-  return res.send({
-    data: captions,
-  });
+  // var captions = await getSubtitles({
+  //   videoID: req.query.id, // youtube video id
+  //   lang: "en", // default: `en`
+  // });
+  // if (captions){
 
-  // res.send("ok")
+  //   console.log(captions);
+  //   return res.send({
+  //     data: captions,
+  //   });
+  // }
+  // res.send("No Captions Found")
+
+
+  try {
+    var captions = await getSubtitles({
+      videoID: req.query.id, // youtube video id
+      lang: "en", // default: `en`
+    });
+    if (captions){
+
+      return res.send({
+        data: captions,
+      });
+    }
+    else{
+      res.send("No Captions Found")
+
+    }
+  } catch (error) {
+    // TypeError: Failed to fetch
+
+    res.send({Error : `Could not find captions for video: ${req.query.id}`  })
+  }
+
+
+
 });
 
 // Catch all handler for all other request.
