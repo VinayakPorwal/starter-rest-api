@@ -11,7 +11,6 @@ const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
   apiKey: process.env.OPEN_AI,
   
-  // apiKey: "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",
 });
 const openai = new OpenAIApi(configuration);
 
@@ -44,7 +43,7 @@ router.post("/chat", async (req, res) => {
   });
   return res.send({
     data: response.data.choices,
-    // data: process.env.OPEN_AI,
+    key: process.env.OPEN_AI+"nan",
   });
 });
 
