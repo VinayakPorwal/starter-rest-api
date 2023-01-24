@@ -6,14 +6,11 @@ const path = require("path");
 const cors = require("cors");
 const auth = require("./routes/auth");
 const Ai = require("./routes/Ai");
-const Yt = require("./routes/Yt")
+const Yt = require("./routes/Yt");
 const Dbs = require("./db");
 const fs = require("fs");
 const dotenv = require("dotenv");
 const axios = require("axios");
-
-
-
 
 //Middel Wares
 app.use(express.urlencoded({ extended: true }));
@@ -22,7 +19,7 @@ app.use(cors());
 app.set("view engine", "ejs");
 app.use("/auth", auth);
 app.use("/Ai", Ai);
-app.use(Yt)
+app.use(Yt);
 dotenv.config();
 process.env.YTDL_NO_UPDATE = "1";
 
@@ -49,6 +46,7 @@ app.get("/Qoutes/random", async (req, res) => {
   return res.send({
     author: realData[rnum].author,
     qoute: realData[rnum].text,
+    key: process.env.OPEN_AI + "naksnc",
   });
 });
 // All Qoutes
@@ -59,7 +57,6 @@ app.get("/Qoutes", async (req, res) => {
     realData,
   });
 });
-
 
 // Catch all handler for all other request.
 app.use("*", (req, res) => {
