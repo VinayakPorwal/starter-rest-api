@@ -19,7 +19,8 @@ const axios = require("axios");
 // for Open Ai ChatGPT
 const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
-  apiKey: "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",
+  // apiKey: "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",
+  apiKey: "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",
 });
 const openai = new OpenAIApi(configuration);
 
