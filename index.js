@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-// const db = require("@cyclic.sh/dynamodb");
 
 const User = require("./models/user");
 const path = require("path");
@@ -8,10 +7,23 @@ const cors = require("cors");
 const auth = require("./routes/auth");
 const Dbs = require("./db");
 const fs = require("fs");
+
+// for youtube download and Related Info
 const ytdl = require("ytdl-core");
 const fetch = require("node-fetch");
-var getSubtitles = require("youtube-captions-scraper").getSubtitles;
 
+// for Youtube captions
+var getSubtitles = require("youtube-captions-scraper").getSubtitles;
+const axios = require("axios");
+
+// for Open Ai ChatGPT
+const { Configuration, OpenAIApi } = require("openai");
+const configuration = new Configuration({
+  apiKey: "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",
+});
+const openai = new OpenAIApi(configuration);
+
+//Middel Wares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
@@ -78,43 +90,49 @@ app.get("/relatedInfo", async (req, res) => {
 
 // caption scraping
 app.get("/caption", async (req, res) => {
-  // var captions = await getSubtitles({
-  //   videoID: req.query.id, // youtube video id
-  //   lang: "en", // default: `en`
-  // });
-  // if (captions){
-
-  //   console.log(captions);
-  //   return res.send({
-  //     data: captions,
-  //   });
-  // }
-  // res.send("No Captions Found")
-
-
   try {
     var captions = await getSubtitles({
       videoID: req.query.id, // youtube video id
       lang: "en", // default: `en`
     });
-    if (captions){
-
+    if (captions) {
       return res.send({
         data: captions,
       });
-    }
-    else{
-      res.send("No Captions Found")
-
+    } else {
+      res.send("No Captions Found");
     }
   } catch (error) {
     // TypeError: Failed to fetch
 
-    res.send({Error : `Could not find captions for video: ${req.query.id}`  })
+    res.send({ Error: `Could not find captions for video: ${req.query.id}` });
   }
+});
 
+// Image Generation
+app.post("/image", async (req, res) => {
+  // return res.render(("download"), {
+  const response = await openai.createImage({
+    prompt: req.body.prompt,
+    n: 2,
+    size: "1024x1024",
+  });
+  return res.send({
+    data : response.data,
+  });
+});
 
-
+//ChatBot
+app.post("/chat", async (req, res) => {
+  const response = await openai.createCompletion({
+    model: "text-davinci-003",
+    prompt: req.body.prompt,
+    max_tokens: 2500,
+    temperature: 0.5,
+  });
+  return res.send({
+    data : response.data.choices,
+  });
 });
 
 // Catch all handler for all other request.
@@ -128,58 +146,3 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`index.js listening on ${port}`);
 });
-
-// #############################################################################
-// This configures static hosting for files in /public that have the extensions
-// listed in the array.
-// var options = {
-//   dotfiles: 'ignore',
-//   etag: false,
-//   extensions: ['htm', 'html','css','js','ico','jpg','jpeg','png','svg'],
-//   index: ['index.html'],
-//   maxAge: '1m',
-//   redirect: false
-// }
-// app.use(express.static('public', options))
-// #############################################################################
-
-// Create or Update an item
-// app.post('/:col/:key', async (req, res) => {
-//   console.log(req.body)
-
-//   const col = req.params.col
-//   const key = req.params.key
-//   console.log(`from collection: ${col} delete key: ${key} with params ${JSON.stringify(req.params)}`)
-//   const item = await db.collection(col).set(key, req.body)
-//   console.log(JSON.stringify(item, null, 2))
-//   res.json(item).end()
-// })
-
-// Delete an item
-// app.delete('/:col/:key', async (req, res) => {
-//   const col = req.params.col
-//   const key = req.params.key
-//   console.log(`from collection: ${col} delete key: ${key} with params ${JSON.stringify(req.params)}`)
-//   const item = await db.collection(col).delete(key)
-//   console.log(JSON.stringify(item, null, 2))
-//   res.json(item).end()
-// })
-
-// Get a single item
-// app.get('/:col/:key', async (req, res) => {
-//   const col = req.params.col
-//   const key = req.params.key
-//   console.log(`from collection: ${col} get key: ${key} with params ${JSON.stringify(req.params)}`)
-//   const item = await db.collection(col).get(key)
-//   console.log(JSON.stringify(item, null, 2))
-//   res.json(item).end()
-// })
-
-// Get a full listing
-// app.get('/:col', async (req, res) => {
-//   const col = req.params.col
-//   console.log(`list collection: ${col} with params: ${JSON.stringify(req.params)}`)
-//   const items = await db.collection(col).list()
-//   console.log(JSON.stringify(items, null, 2))
-//   res.json(items).end()
-// })
