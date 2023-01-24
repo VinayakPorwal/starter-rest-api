@@ -5,24 +5,15 @@ const User = require("./models/user");
 const path = require("path");
 const cors = require("cors");
 const auth = require("./routes/auth");
+const Ai = require("./routes/Ai");
+const Yt = require("./routes/Yt")
 const Dbs = require("./db");
 const fs = require("fs");
-
-// for youtube download and Related Info
-const ytdl = require("ytdl-core");
-const fetch = require("node-fetch");
-
-// for Youtube captions
-var getSubtitles = require("youtube-captions-scraper").getSubtitles;
+const dotenv = require("dotenv");
 const axios = require("axios");
 
-// for Open Ai ChatGPT
-const { Configuration, OpenAIApi } = require("openai");
-const configuration = new Configuration({
-  // apiKey: "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",
-  apiKey: "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",
-});
-const openai = new OpenAIApi(configuration);
+
+
 
 //Middel Wares
 app.use(express.urlencoded({ extended: true }));
@@ -30,6 +21,9 @@ app.use(express.json());
 app.use(cors());
 app.set("view engine", "ejs");
 app.use("/auth", auth);
+app.use("/Ai", Ai);
+app.use(Yt)
+dotenv.config();
 process.env.YTDL_NO_UPDATE = "1";
 
 app.get("/users", async (req, res) => {
@@ -66,75 +60,6 @@ app.get("/Qoutes", async (req, res) => {
   });
 });
 
-// Youtube Download API end Point
-app.get("/download", async (req, res) => {
-  const v_id = req.query.url.split("v=")[1];
-  const info = await ytdl.getInfo(req.query.url);
-  // return res.render(("download"), {
-  return res.send({
-    url: "https://www.youtube.com/embed/" + v_id,
-    info: info.formats.sort((a, b) => {
-      return a.mimeType < b.mimeType;
-    }),
-    data: info.videoDetails,
-  });
-});
-
-// Youtube Video Related Info API end Point
-app.get("/relatedInfo", async (req, res) => {
-  const info = await ytdl.getInfo(req.query.url);
-  // return res.render(("download"), {
-  return res.send({
-    data: info.related_videos,
-  });
-});
-
-// caption scraping
-app.get("/caption", async (req, res) => {
-  try {
-    var captions = await getSubtitles({
-      videoID: req.query.id, // youtube video id
-      lang: "en", // default: `en`
-    });
-    if (captions) {
-      return res.send({
-        data: captions,
-      });
-    } else {
-      res.send("No Captions Found");
-    }
-  } catch (error) {
-    // TypeError: Failed to fetch
-
-    res.send({ Error: `Could not find captions for video: ${req.query.id}` });
-  }
-});
-
-// Image Generation
-app.post("/image", async (req, res) => {
-  // return res.render(("download"), {
-  const response = await openai.createImage({
-    prompt: req.body.prompt,
-    n: 2,
-    size: "1024x1024",
-  });
-  return res.send({
-    data : response.data,
-  });
-});
-
-//ChatBot
-app.post("/chat", async (req, res) => {
-  const response = await openai.createCompletion({
-    model: "text-davinci-003",
-    prompt: req.body.prompt,
-    max_tokens: 2500,
-    temperature: 0.5,
-  });
-  return res.send({
-    data : response.data.choices,
-  });
-});
 
 // Catch all handler for all other request.
 app.use("*", (req, res) => {
