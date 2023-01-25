@@ -22,7 +22,7 @@ router.post("/image", async (req, res) => {
   const response = await openai.createImage({
     prompt: req.body.prompt,
     n: 2,
-    size: "540x540",
+    size: "256x256",
   });
   return res.send({
     data: response.data,

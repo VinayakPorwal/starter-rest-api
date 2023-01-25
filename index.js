@@ -65,7 +65,7 @@ app.use("*", (req, res) => {
 });
 
 // Start the server
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 app.listen(port, () => {
   console.log(`index.js listening on ${port}`);
 });
