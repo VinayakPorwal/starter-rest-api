@@ -27,6 +27,9 @@
     "node-fetch": "^2.6.8",
     "openai": "^3.1.0",
     "youtube-captions-scraper": "^2.0.0",
-    "ytdl-core": "^4.11.2"
+    "ytdl-core": "^4.11.2",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.4.1"
   }
 }
