@@ -62,6 +62,7 @@ app.get("/Qoutes", async (req, res) => {
 
 //Weather 
 app.get("/Weather/:city", async (req, res) => {
+  
   const response = await fetch(
     `https://api.openweathermap.org/data/2.5/weather?q=${req.params.city}&appid=75604dabe1d443f2296dedb386f124a4`
   );

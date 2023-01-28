@@ -20,7 +20,7 @@ router.post("/image", fetchuser, async (req, res) => {
     let userId = req.user.id;
     const user = await User.findById(userId).select("-password");
     if (user.Wallet === 0) {
-      return res.send({ data: "Empty Wallet" });
+      return res.send({ error: "Insufficient Token in Wallet to Generate Response!" });
     }
     const response = await openai.createImage({
       prompt: req.body.prompt,
@@ -45,7 +45,7 @@ router.post("/chat", fetchuser, async (req, res) => {
     let userId = req.user.id;
     const user = await User.findById(userId).select("-password");
     if (user.Wallet === 0) {
-      return res.send({ data: "Empty Wallet" });
+      return res.send({ error: "Insufficient Token in Wallet to Generate Response!" });
     }
     const response = await openai.createCompletion({
       model: "text-davinci-003",
