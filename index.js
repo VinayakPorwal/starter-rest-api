@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-
+const fetch = require('node-fetch');
 const User = require("./models/user");
 const path = require("path");
 const cors = require("cors");
@@ -55,6 +55,21 @@ app.get("/Qoutes", async (req, res) => {
   let realData = await data.json();
   return res.send({
     realData,
+  });
+});
+
+
+
+//Weather 
+app.get("/Weather/:city", async (req, res) => {
+  const response = await fetch(
+    `https://api.openweathermap.org/data/2.5/weather?q=${req.params.city}&appid=75604dabe1d443f2296dedb386f124a4`
+  );
+  const data = await response.json();
+  res.send({
+    data: data,
+    image:
+      "http://openweathermap.org/img/w/" + data["weather"][0]["icon"] + ".png",
   });
 });
 

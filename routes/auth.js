@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 const router = express.Router();
-const User = require("./../models/user");
+const {User , Image} = require("./../models/user");
 const { body, validationResult } = require("express-validator");
 var fetchuser = require("./middleWare");
 const JWT_SECRET = "CraftXForWeb3";
@@ -80,6 +80,7 @@ router.post(
         name: req.body.name,
         email: req.body.email,
         password: secPass,
+        Bio : req.body.bio,
       });
 
       const data = {
@@ -107,5 +108,48 @@ router.post("/getuser", fetchuser, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+// ROUTE 4: Get loggedin User Details. Login required
+router.post("/update", fetchuser, async (req, res) => {
+  try {
+    let userId = req.user.id;
+    let bio = req.body.bio;
+    let api = req.body.Api_key;
+    const user = await User.findById(userId).select("-password");
+    if (req.body.bio){
+      user.Bio = bio
+      await user.save()
+    }
+
+    if (req.body.Api_key){
+      user.Api_key = api
+      await user.save()
+    }
+    res.send(user);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+//Image upload
+
+// router.post('/upload', upload.single('image'), (req, res) => {
+//   // req.file contains the image data
+//   console.log(req.file);
+
+//   // you can now process the image and send it to your server
+
+//   res.json({
+//       message: 'Image uploaded successfully'
+//   });
+// });
+
+
+router.post("/image", (req, res)=>{
+  console.log(req.body)
+  res.send(req.body.name)
+})
 
 module.exports = router;
