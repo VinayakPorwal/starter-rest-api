@@ -98,9 +98,21 @@ router.post(
 );
 
 // ROUTE 3: Get loggedin User Details. Login required
-router.post("/getuser", async (req, res) => {
+router.post("/getuser", fetchuser,async (req, res) => {
   try {
     let userId = req.user.id;
+    const user = await User.findById(userId).select("-password");
+    res.send(user);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// ROUTE 3: Get loggedin User Details. Login required
+router.post("/getusers", async (req, res) => {
+  try {
+    let userId = req.body.id;
     const user = await User.findById(userId).select("-password");
     res.send(user);
   } catch (error) {
