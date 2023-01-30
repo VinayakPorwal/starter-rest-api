@@ -98,7 +98,7 @@ router.post(
 );
 
 // ROUTE 3: Get loggedin User Details. Login required
-router.post("/getuser", fetchuser, async (req, res) => {
+router.post("/getuser", async (req, res) => {
   try {
     let userId = req.user.id;
     const user = await User.findById(userId).select("-password");
@@ -115,14 +115,19 @@ router.post("/update", fetchuser, async (req, res) => {
     let userId = req.user.id;
     let bio = req.body.bio;
     let api = req.body.Api_key;
+    let wallet = req.body.Wallet;
     const user = await User.findById(userId).select("-password");
     if (req.body.bio){
       user.Bio = bio
       await user.save()
     }
 
-    if (req.body.Api_key){
+    if (api){
       user.Api_key = api
+      await user.save()
+    }
+    if (wallet){
+      user.Wallet = wallet
       await user.save()
     }
     res.send(user);
