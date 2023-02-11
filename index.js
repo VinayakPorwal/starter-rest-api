@@ -12,6 +12,8 @@ const fs = require("fs");
 const dotenv = require("dotenv");
 const axios = require("axios");
 
+const nlp = require("compromise");
+
 //Middel Wares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -71,6 +73,28 @@ app.get("/Weather/:city", async (req, res) => {
     data: data,
     image:
       "http://openweathermap.org/img/w/" + data["weather"][0]["icon"] + ".png",
+  });
+});
+
+
+//Chatbot 
+app.get("/ml", async (req, res) => {
+
+
+
+
+// 3. Use the library to perform text analysis
+const text = 'The quick brown fox jumps over the lazy dog';
+const sentences = nlp.text(text).sentences;
+console.log(sentences);
+
+// Output:
+// [ 'The quick brown fox jumps over the lazy dog' ]
+
+  
+  res.send({
+    data: sentences,
+   
   });
 });
 

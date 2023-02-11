@@ -1,43 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     Welcome to Backend Iota Server
     <!-- GET -->
     /users for fecth users data
     <!-- POST -->
     /auth/login/ for login check
     <!-- POST -->
-    /auth/signup/ for registering users  
+    /auth/signup/ for registering users
+  </body>
+  <button onclick="downloadVideo()">Download image</button>
 
-</body>
+  <script type="text/javascript">
+    // function downloadVideo() {
+    //   var xhr = new XMLHttpRequest();
+    //   xhr.open(
+    //     "GET",
+    //     "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/is_my_cat_normal_slideshow/1800x1200_is_my_cat_normal_slideshow.jpg",
+    //     true
+    //   );
+    //   xhr.responseType = "blob";
+    //   xhr.onload = function () {
+    //     var urlCreator = window.URL || window.webkitURL;
+    //     var imageUrl = urlCreator.createObjectURL(this.response);
+    //     var tag = document.createElement("a");
+    //     tag.href = imageUrl;
+    //     tag.target = "_blank";
+    //     tag.download = "demo.png";
+    //     document.body.appendChild(tag);
+    //     tag.click();
+    //     document.body.removeChild(tag);
+    //   };
+    //   xhr.onerror = (err) => {
+    //     alert("Failed to download picture");
+    //   };
+    //   xhr.send();
+    // }
+  </script>
+  <script src="//unpkg.com/brain.js"></script>
+  <script>
+    const nlp_compromise = require("nlp_compromise");
+
+    // Define the input text
+    let inputText = "Hello, how are you today?";
+
+    // Use nlp_compromise to process the input text
+    let doc = nlp_compromise.text(inputText);
+
+    // Extract the keywords from the processed text
+    let keywords = doc.keywords().map((keyword) => keyword.text);
+
+    // Create a neural network with the brain.js library
+    const net = new brain.recurrent.LSTM();
+
+    // Train the network with the extracted keywords
+    const trainingData = [{ input: keywords, output: "greeting" }];
+
+    net.train(trainingData, { iterations: 2000, log: true });
+
+    // Use the trained network to predict the output for new input
+    const output = net.run("hello today");
+    console.log(output);
+    // Output: greeting
+  </script>
 </html>
-<button onclick="downloadVideo()">Download image</button>
-
-<script type="text/javascript">
-    function downloadVideo() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/is_my_cat_normal_slideshow/1800x1200_is_my_cat_normal_slideshow.jpg', true);
-  xhr.responseType = 'blob';
-  xhr.onload = function() {
-    var urlCreator = window.URL || window.webkitURL;
-    var imageUrl = urlCreator.createObjectURL(this.response);
-    var tag = document.createElement('a');
-    tag.href = imageUrl;
-    tag.target = '_blank';
-    tag.download = 'demo.png';
-    document.body.appendChild(tag);
-    tag.click();
-    document.body.removeChild(tag);
-  };
-  xhr.onerror = err => {
-    alert('Failed to download picture');
-  };
-  xhr.send();
-}
-</script>
