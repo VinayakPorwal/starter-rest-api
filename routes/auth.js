@@ -179,6 +179,18 @@ router.get("/GetReviews", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+router.post("/approve", async (req, res) => {
+  try {
+    let id = req.body.id;
+    const review = await Review.findById(id);
+    review.approval = true;
+    await review.save();
+    res.status(201).send("Approved");
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 //Image upload
 
