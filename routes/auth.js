@@ -157,10 +157,12 @@ router.post("/Reviews", async (req, res) => {
   try {
     let review = req.body.review;
     let name = req.body.name;
+    let email = req.body.email;
 
     const reviewGenerate = await Review.create({
       name: name,
       review: review,
+      email: email,
     });
 
     res.status(201).send(reviewGenerate);
