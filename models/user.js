@@ -51,7 +51,23 @@ const ImageSchema = new Schema({
     required: true,
   },
 });
+
+const ReviewSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  review: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+});
 const Image = mongoose.model("Image", ImageSchema);
 const User = mongoose.model("user", UserSchema);
+const Review = mongoose.model("Review", ReviewSchema);
 // user.createIndexes();
-module.exports = { User, Image };
+module.exports = { User, Image, Review };

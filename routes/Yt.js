@@ -5,6 +5,8 @@ const router = express.Router();
 // for youtube download and Related Info
 const ytdl = require("ytdl-core");
 const fetch = require("node-fetch");
+const youtubesearchapi=require('youtube-search-api');
+
 
 // for Youtube captions
 var getSubtitles = require("youtube-captions-scraper").getSubtitles;
@@ -39,6 +41,24 @@ router.get("/caption", async (req, res) => {
       videoID: req.query.id, // youtube video id
       lang: "en", // default: `en`
     });
+    if (captions) {
+      return res.send({
+        data: captions,
+      });
+    } else {
+      res.send("No Captions Found");
+    }
+  } catch (error) {
+    // TypeError: Failed to fetch
+
+    res.send({ Error: `Could not find captions for video: ${req.query.id}` });
+  }
+});
+
+// searching 
+router.get("/search", async (req, res) => {
+  try {
+    const captions = youtubesearchapi.GetListByKeyword("Business",true,10)
     if (captions) {
       return res.send({
         data: captions,
