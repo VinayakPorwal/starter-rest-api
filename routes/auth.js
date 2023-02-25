@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 const router = express.Router();
-const { User, Image, Review } = require("./../models/user");
+const { User, Image, Review, Count } = require("./../models/user");
 const { body, validationResult } = require("express-validator");
 var fetchuser = require("./middleWare");
 const JWT_SECRET = "CraftXForWeb3";
@@ -188,6 +188,39 @@ router.post("/approve", async (req, res) => {
     review.approval = true;
     await review.save();
     res.status(201).send("Approved");
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Views
+router.post("/updateViews", async (req, res) => {
+  try {
+    let id = req.body.name;
+    const blog = await Count.findOne({ name: id });
+    if (blog) {
+      blog.views += 1;
+      await blog.save();
+    }
+    res.send(blog);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Views
+router.post("/views", async (req, res) => {
+  try {
+    let id = req.body.name;
+    const blog = await Count.findOne({ name: id });
+    if (!blog) {
+      const newBlog = await Count.create({ name: id, views: 1 });
+      res.send(newBlog);
+      return;
+    }
+    res.send(blog);
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");

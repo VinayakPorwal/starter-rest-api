@@ -74,8 +74,21 @@ const ReviewSchema = new Schema({
     default: Date.now,
   },
 });
+const CountSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  views: {
+    type: Number,
+    required: true,
+  },
+  
+});
 const Image = mongoose.model("Image", ImageSchema);
 const User = mongoose.model("user", UserSchema);
 const Review = mongoose.model("Review", ReviewSchema);
+const Count = mongoose.model("Count", CountSchema);
+
 // user.createIndexes();
-module.exports = { User, Image, Review };
+module.exports = { User, Image, Review , Count};
