@@ -220,6 +220,10 @@ router.post("/views", async (req, res) => {
       res.send(newBlog);
       return;
     }
+    else if (blog) {
+      blog.views += 1;
+      await blog.save();
+    }
     res.send(blog);
   } catch (error) {
     console.error(error.message);
