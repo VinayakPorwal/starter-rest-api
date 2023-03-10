@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 var fetchuser = require("./middleWare");
 const { User, Image } = require("./../models/user");
+const fetch = require("node-fetch");
+
 
 const dotenv = require("dotenv");
 const router = express.Router();
@@ -67,5 +69,31 @@ router.post("/chat", fetchuser, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+
+
+//Stock
+router.get('/stock/:id', (req, res) => {
+  const  tickers = req.params.id;
+  const url = `https://api.tiingo.com/iex/?tickers=${tickers}&token=2bf8652da8a14670611b54029fb116ac91870f40`;
+
+  // Forward the request to the Tiingo API
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      // Set the CORS headers
+      res.set('Access-Control-Allow-Origin', 'http://localhost:5173');
+      res.set('Access-Control-Allow-Methods', 'GET');
+      res.set('Access-Control-Allow-Headers', 'Content-Type');
+
+      // Send the response data
+      res.send(data);
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).send({ message: 'Error fetching data from Tiingo API' });
+    });
+});
+
 
 module.exports = router;
